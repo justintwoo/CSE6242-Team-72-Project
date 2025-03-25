@@ -1,0 +1,12 @@
+pandas
+numpy
+scikit-learn==1.2.2
+xgboost
+matplotlib
+seaborn
+plotly
+shap
+folium
+pgeocode
+jupyterlab
+notebook
