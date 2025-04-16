@@ -171,14 +171,19 @@ print(f"Train MAPE: {mape:.2f}%")
 # SHAP Explanation (on sample)
 # ----------------------------------------
 import shap
-# Sample 5000 rows for explanation
-sample_size = min(5000, X.shape[0])
+
+sample_size = min(10, X.shape[0])
 X_sample = pd.DataFrame(X_scaled, columns=features).sample(sample_size, random_state=42)
 
-# Use TreeExplainer for tree-based models
-explainer = shap.TreeExplainer(best_model)
+if best_model_name in ["Random Forest", "XGBoost"]:
+    print("Using TreeExplainer for Random Forest")
+    explainer = shap.TreeExplainer(best_model)
+elif best_model_name == "Linear Regression":
+    explainer = shap.LinearExplainer(best_model, X_sample)
+else:
+    explainer = shap.KernelExplainer(best_model.predict, X_sample)
+
 shap_values = explainer.shap_values(X_sample)
 
-# Plot summary
 print("\nGenerating SHAP summary plot for model interpretation...")
 shap.summary_plot(shap_values, X_sample, feature_names=features)
